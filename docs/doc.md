@@ -42,6 +42,11 @@ wget https://github.com/vuejs-templates/webpack/archive/1.3.1.zi
 1. Install MySQL Server
 download packages: https://dev.mysql.com/downloads/mysql/5.7.html#downloads
 wget https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-community-5.7.24.0.msi
+
+windows系统上mysql 5.7开启远程连接
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '密码' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
 2. Install pymysql for python connect mysql server(不好用)
 wget https://files.pythonhosted.org/packages/a7/7d/682c4a7da195a678047c8f1c51bb7682aaedee1dca7547883c3993ca9282/PyMySQL-0.9.2-py2.py3-none-any.whl
 pip install PyMySQL-0.9.2-py2.py3-none-any.whl
