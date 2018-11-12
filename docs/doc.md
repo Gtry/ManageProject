@@ -98,6 +98,11 @@ MIDDLEWARE
   'corsheaders.middleware.CorsMiddleware',
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+无法访问:
+报错:provisional headers are shown
+no-referrer-when-downgrade
+解决:https://blog.csdn.net/lyn1772671980/article/details/82386005
 ```
 
 ## Run
