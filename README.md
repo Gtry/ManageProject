@@ -27,16 +27,17 @@ cd Django-2.0.9
 python setup.py install
 ```
 
-4. Install (在Django层注入header解决跨域问题)
+4. Install coresheads(在Django层注入header解决跨域问题)
 * 在线:pip install django-cors-headers
 * 离线:
 ```
 wget https://files.pythonhosted.org/packages/cc/7e/83ba784ad2b95317bbbed915f0888d7d1cd8dc3d2e4b8ddec8fbc4c3e800/django_cors_headers-2.4.0-py2.py3-none-any.whl
 pip install django_cors_headers-2.4.0-py2.py3-none-any.whl
 ```
-(未使用)
-* pip install djangorestframework-3.7.7-py2.py3-none-any.whl
-* python3 -m pip install djangorestframework
+
+5. Install restframework(会话认证系统使用)
+* 离线: pip install djangorestframework-3.7.7-py2.py3-none-any.whl
+* 在线: python3 -m pip install djangorestframework
 
 ### 1.2 Install Frontend Rely
 ```
@@ -51,6 +52,9 @@ wget https://github.com/vuejs-templates/webpack/archive/1.3.1.zip
 ```
 download packages: https://dev.mysql.com/downloads/mysql/5.7.html#downloads
 wget https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-community-5.7.24.0.msi
+
+配置环境变量：
+在Path中添加: C:\Program Files\MySQL\MySQL Server 5.7\bin;
 ```
 2. Install mysqlclient for python connect mysql server
 * 地址: https://www.lfd.uci.edu/~gohlke/pythonlibs/#mysqlclient
@@ -75,7 +79,7 @@ pip install PyMySQL-0.9.2-py2.py3-none-any.whl
 	vue init ./packages/webpack-1.3.1 frontend
 ```
 
-## Develop
+## 3. Develop
 1. package vuejs project
 ```
 cd AuthAdmin/frontend
@@ -106,14 +110,18 @@ MIDDLEWARE
 CORS_ORIGIN_ALLOW_ALL = True
 ```
 
-## Dev Run
+## 4. Dev Run
 1. database
 login: 
-mysql -h127.0.0.1 -P3306 -uroot -p
+  mysql -h127.0.0.1 -P3306 -uroot -p
 create: 
-create database authadmin character set utf8;
+  create database authadmin character set utf8;
 delete:
-drop database authadmin;
+  drop database authadmin;
+支持root用户允许远程连接mysql数据库:
+  修改配置文件中bind-address为: bind-address = 0.0.0.0
+  grant all privileges on *.* to 'root'@'%' identified by 'root' with grant option;
+  flush privileges;
 
 2. create data
 python manage.py makemigrations backend
@@ -124,7 +132,88 @@ npm install --save-dev axios@0.18.0
 npm install --save-dev sass-loader@6.0.0
 npm install --save-dev node-sass@4.10.0
 npm install --save-dev element-ui@2.4.10
-
+npm install --save-dev vuex@3.0.1
 npm install --save-dev font-awesome@4.7.0
-npm install --save-dev ajv@6.0.0
+npm install --save-dev babel-polyfill@6.26.0
 
+```
+暂未使用
+npm install --save-dev ajv@6.0.0
+```
+
+## 5. Deploy
+1. Install uwsgi
+1) vim /etc/uwsgi/apps-enabled/uwsgi.ini
+```
+[uwsgi]
+
+socket  = /etc/uwsgi/uwsgi.sock
+chdir   = /root/ProjectManage
+module  = AuthAdmin.wsgi:application
+
+master  = true
+processes = 4
+workers = 5
+pidfile = /etc/uwsgi/uwsgi.pid
+static-map =  /static=/root/ProjectManage/frontend/dist
+
+vacuum  = true
+thunder-lock  = true
+enable-threads  = true
+daemonize = /etc/uwsgi/uwsgi.log
+```
+2) uwsgi --ini /etc/uwsgi/apps-enabled/uwsgi.ini
+
+2. Install nginx
+1) vim /etc/nginx/sited-enabled/default
+```
+upstream authadmin_pool {
+    server unix:/etc/uwsgi/uwsgi.sock
+}
+
+server {
+    listen 9003 default_server;
+    listen [::]:9003 default_server ipv6only-on;
+
+    server_name 10.6.13.34;
+
+    location /admin {
+        uwsgi_connect_timeout   3000;
+        uwsgi_send_timeout      3000;
+        uwsgi_read_timeout      3000;
+        uwsgi_param Host        $host;
+        uwsgi_param X-Real-IP   $remote_addr;
+        uwsgi_param X-Forwarded-For $proxy_add_x_forwarded_for;
+        uwsgi_param X-Forwarded-Proto   $http_x_forwarded_proto;
+        include uwsgi_params;
+        uwsgi_pass              authadmin_pool;
+    }
+
+    location /api {
+        add_header              Access-Control-Allow-Origin *;
+        add_header              Access-Control-Allow-Headers "Orgin, X-Requested-With, Content-Type, Accept";
+        add_header              Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        uwsgi_connect_timeout   3000;
+        uwsgi_send_timeout      3000;
+        uwsgi_read_timeout      3000;
+        uwsgi_param Host        $host;
+        uwsgi_param X-Real-IP   $remote_addr;
+        uwsgi_param X-Forwarded-For $proxy_add_x_forwarded_for;
+        uwsgi_param X-Forwarded-Proto   $http_x_forwarded_proto;
+        include uwsgi_params;
+        uwsgi_pass              authadmin_pool;
+    }
+
+    location / {
+        try_files $uri $uri @router;
+        index index.html;
+    }
+
+    root /root/ProjectManage/frontend/dist/;
+    index index.html;
+    location $router {
+        rewrite ^(.*)$ /index.html last;
+    }
+}
+```
+2) service nginx restart
