@@ -96,8 +96,27 @@ DATABASES = {
         'PASSWORD': 'root',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+    },
+    'svndb': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'svninfo',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
+
+DATABASE_APPS_MAPPING = {
+    # example: 
+    # 'app_name': 'database_name'
+    # 'user': 'default',
+    'svn': 'svndb',
+}
+
+DATABASE_ROUTERS = [
+    '{}.database_router.DatabaseAppsRouter'.format(SUB_DIR)
+]
 
 
 # Password validation

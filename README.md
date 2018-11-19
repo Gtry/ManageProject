@@ -116,6 +116,7 @@ login:
   mysql -h127.0.0.1 -P3306 -uroot -p
 create: 
   create database authadmin character set utf8;
+  create database svninfo character set utf8;
 delete:
   drop database authadmin;
 支持root用户允许远程连接mysql数据库:
