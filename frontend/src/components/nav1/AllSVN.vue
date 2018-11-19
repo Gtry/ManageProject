@@ -17,7 +17,6 @@
 
 	<!--列表-->
 	<el-table :data="svnPathList" 
-		height="680"
 		@row-dblclick="selectLine"
 		highlight-current-row 
 		v-loading="listLoading" 
@@ -93,18 +92,13 @@ import { getSVNPathList } from '@/assets/js/api/index';
 export default {
 	data() {
 		return {
+			// svnPathList: [],
 			svnPathList: [{
 				svnName: 'test',
 				svnPath: '',
 				onlyReadUserNum: 0,
 				readAndWriteUserNum: 0,
 				Manager: 'test Manager'
-			}, {
-				svnName: 'test1',
-				svnPath: '',
-				onlyReadUserNum: 0,
-				readAndWriteUserNum: 0,
-				Manager: 'test1 Manager'
 			}],
 			// 列表选中列
 			sels: [],
@@ -124,7 +118,8 @@ export default {
 				onlyReadUser: '',
 				readAndWriteUserNum: 0,
 				readAndWriteUser: ''
-			}
+			},
+			svn_lists: []
 		}
 	},
 	methods: {
@@ -148,12 +143,18 @@ export default {
 		},
 		getSVNPathListPage() {
 			this.listLoading = true;
-			var params = { page: this.page, svnPath: this.filters.svnPath };
+			// var params = { page: this.page, svnPath: this.filters.svnPath };
+			var TokenParams = { token: sessionStorage.getItem('token'), username: sessionStorage.getItem('username'), page: this.page, svnPath: this.filters.svnPath };
 			// NProgress.start();
 			getSVNPathList(params).then(res => {
-				this.total = res.data.total;
-				this.svnPathList = res.data.svnPathList;
-				alert("test getSVNPathList");
+				this.listLoading = false;
+				// this.total = res.data.total;
+				for(let svn_list of res.svn_lists) {
+					let svnPath = {};
+					svnPath.svnName = svn_list.name;
+					svnPath.svnPath = svn_list.url;
+					this.svnPathList.push(svnPath);
+				};
 			});
 		},
 		selsChange(sels) {
