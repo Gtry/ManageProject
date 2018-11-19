@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.core import serializers
 import json
 #from django.views.decorators.csrf import csrf_exempt 
-from backend.models import UserInfo
+from backend.user.models import UserInfo
 
 # Create your views here.
 #@csrf_exempt

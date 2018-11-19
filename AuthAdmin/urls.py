@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
-import backend.urls
+import backend.user.urls
+import backend.svn.urls
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
-    path(r'api/', include(backend.urls)),
+    path(r'user/', include(backend.user.urls)),
+    path(r'svn/', include(backend.svn.urls)),
     path(r'', TemplateView.as_view(template_name="index.html")),
 ]

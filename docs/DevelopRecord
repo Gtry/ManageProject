@@ -1,0 +1,23 @@
+2018.11.19
+1. 框架调整：后端多app结构分离
+django-admin startapp user backend/user
+django-admin startapp svn backend/svn
+
+2. 多数据使用
+
+3. 对接现有数据库
+python manage.py makemigrations svn
+python manage.py migrate svn --database=svn
+
+4. AllSVN主界面展示
+
+5. AllSVN界面expand列增加点击event，实现动态获取子svn基础信息
+
+2018.11.20
+
+1. 表格样式：table行距等
+
+2. 左侧图标显示
+
+3. 
+

@@ -11,10 +11,11 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+SUB_DIR = os.path.basename(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -40,10 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backend',
+    'backend.user',
+    'backend.svn',
     'corsheaders',
     'rest_framework.authtoken'
 ]
+
+APP_DIRS = os.path.join(BASE_DIR, 'backend')
+sys.path.insert(0, APP_DIRS)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,7 +61,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'AuthAdmin.urls'
+ROOT_URLCONF = '{}.urls'.format(SUB_DIR)
 
 TEMPLATES = [
     {
@@ -75,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'AuthAdmin.wsgi.application'
+WSGI_APPLICATION = '{}.wsgi.application'.format(SUB_DIR)
 
 
 # Database

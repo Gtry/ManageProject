@@ -94,18 +94,18 @@ instance.interceptors.response.use(
 );
 
 export const requestLogon = data => {
-    return axios.post(`/api/userLogon`, data).then(res => res.data).catch(err => console.log(err));
+    return axios.post(`/user/userLogon`, data).then(res => res.data).catch(err => console.log(err));
 };
 
 export const requestLogin = data => {
-    return axios.post(`/api/userLogin`, data).then(res => res.data);
+    return axios.post(`/user/userLogin`, data).then(res => res.data);
 };
 
 export const requestInfo = data => {
-    return axios.post(`/api/userInfo`, data).then(res => res.data).catch(err => console.log(err));
+    return axios.post(`/user/userInfo`, data).then(res => res.data).catch(err => console.log(err));
 };
 
 export const getSVNPathList = data => {
-    return axios.post(`/api/getSVNPathList`, data).then(res => res.data).catch(err => console.log(err));
+    return axios.post(`/svn/getSVNPathList`, data).then(res => res.data).catch(err => console.log(err));
 };
 
