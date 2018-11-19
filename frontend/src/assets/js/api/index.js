@@ -106,6 +106,6 @@ export const requestInfo = data => {
 };
 
 export const getSVNPathList = data => {
-    return axios.post(`/svn/getSVNPathList`, data).then(res => res.data).catch(err => console.log(err));
+    return axios.post(`/svn/getSVNPathList`, data).then(res => res.data);
 };
 

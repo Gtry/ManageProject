@@ -18,21 +18,26 @@
 	<!--列表-->
 	<el-table :data="svnPathList" 
 		v-loading="listLoading" 
-		highlight-current-row 
-		row-key="id"
-		:expand-row-keys="expands"
-		@row-click="rowClick"
 		@row-dblclick="selectLine"
+		highlight-current-row 
 		@selection-change="selsChange">
-		<el-table-column type="selection" width="55" >
+		<el-table-column type="selection" width="55">
 		</el-table-column>
 		<el-table-column type="expand" @expand-change="getChird" width="55">
 		</el-table-column>
+		<el-table-column type="index" label="序号" width="75">
+		</el-table-column>
 		<el-table-column prop="svnName" label="svn名称" width="200" sortable>
 		</el-table-column>
-		<el-table-column prop="svnPath" label="svn路径" width="900" :formatter="formatSex" sortable>
+		<el-table-column prop="svnPath" label="svn路径" width="600" :formatter="formatSex" sortable>
 		</el-table-column>
-		<el-table-column fixed="right" label="操作" width="200">
+		<el-table-column prop="onlyReadUserNum" label="只读用户数" width="180" sortable>
+		</el-table-column>
+		<el-table-column prop="readAndWriteUserNum" label="读写用户数" width="180" sortable>
+		</el-table-column>
+		<el-table-column prop="Manager" label="负责人" min-width="180" sortable>
+		</el-table-column>
+		<el-table-column fixed="right" label="操作" width="160">
 			<template slot-scope="scope">
 				<el-button size="small" 
 					type="text"
@@ -43,39 +48,39 @@
 		</el-table-column>
 	</el-table>
 
+	<!--工具条-->
+	<el-col :span="24" class="toolbar">
+		<el-button type="danger" @click="batchOperate" :disabled="this.sels.length===0">批量处理</el-button>
+		<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+		</el-pagination>
+	</el-col>
+
 	<!--详情界面-->
-	<el-dialog title="详情" :visible.sync="detailFormVisible" :close-on-click-modal="false" width="50%" append-to-body center>
+	<el-dialog title="详情" :visible.sync="detailFormVisible" :close-on-click-modal="false" width="50%" append-to-body>
 		<el-form :model="detailForm" label-width="80px" :rules="detailFormRules" ref="detailForm">
-			<el-form-item prop="svnName" label="svn库名" style="width: 160px;">
-				<span>{{ detailForm.svnName }}</span>
+			<el-form-item prop="svnName" label="svn库名">
+				<el-input v-model="detailForm.svnName" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item prop="snvPath" label="svn路径" style="width: 160px;">
-				<span>{{ detailForm.snvPath }}</span>
+			<el-form-item prop="snvPath" label="svn路径">
+				<el-input v-model="detailForm.snvPath" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item prop="onlyReadUserNum" label="只读用户数" style="width: 160px;">
-				<span>{{ detailForm.onlyReadUserNum }}</span>
+			<el-form-item prop="onlyReadUserNum" label="只读用户数">
+				<el-input-number v-model="detailForm.onlyReadUserNum" :min="0" :max="200"></el-input-number>
 			</el-form-item>
-			<el-form-item prop="onlyReadUser" label="只读用户" style="width: 160px;">
-				<span>{{ detailForm.onlyReadUser }}</span>
+			<el-form-item prop="onlyReadUser" label="只读用户">
+				<el-input v-model="detailForm.onlyReadUser" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item prop="readAndWriteUserNum" label="读写用户数" style="width: 160px;">
-				<span>{{ detailForm.readAndWriteUserNum }}</span>
+			<el-form-item prop="readAndWriteUserNum" label="读写用户数">
+				<el-input-number v-model="detailForm.readAndWriteUserNum" :min="0" :max="200"></el-input-number>
 			</el-form-item>
-			<el-form-item prop="readAndWriteUser" label="读写用户" style="width: 160px;">
-				<span>{{ detailForm.readAndWriteUser }}</span>
+			<el-form-item prop="readAndWriteUser" label="读写用户">
+				<el-input v-model="detailForm.readAndWriteUser" auto-complete="off"></el-input>
 			</el-form-item>
 		</el-form>
-
 		<div slot="footer" class="dialog-footer">
 			<el-button @click.native="detailFormVisible = false">返回</el-button>
 		</div>
 	</el-dialog>
-
-	<!--工具条-->
-	<el-col :span="24" class="toolbar">
-		<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
-		</el-pagination>
-	</el-col>
 </section>
 </template>
 
@@ -88,10 +93,11 @@ export default {
 		return {
 			// svnPathList: [],
 			svnPathList: [],
+			// 列表选中列
+			sels: [],
 			filters: {
 				svnPath: ''
 			},
-			dir_n: 0,
 			total: 0,
 			page: 1,
 			listLoading: false,
@@ -104,8 +110,8 @@ export default {
 			detailFormVisible: false,
 			detailForm: {
 				id: 0,
-				svnName: 'test svnName',
-				svnPath: 'test svnPath',
+				svnName: '',
+				svnPath: '',
 				onlyReadUserNum: 0,
 				onlyReadUser: '',
 				readAndWriteUserNum: 0,
@@ -115,36 +121,34 @@ export default {
 		}
 	},
 	methods: {
-		resetForm(fromName) {
-			this.$refs[fromName].resetFields();
-		},
-		selectLine(row, event, column) {
-			alert(row.id);
-		},
-		selsChange(sels) {
-			this.sels = sels;
-		},
-		getChird() {
-			alert("test getChird");
-		},
 		handleDetail(index, row) {
 			this.detailFormVisible = true;
 			this.detailForm = Object.assign({}, row);
 		},
+		selectLine(row, event, column) {
+			alert(row.id);
+		},
+		getChird() {
+			alert("test getChird");
+		},
+		resetForm(fromName) {
+			this.$refs[fromName].resetFields();
+		},
+		handleCurrentChange(value) {
+			this.page = value;
+			this.getSVNPathListPage();
+		},
+		batchOperate() {
+		},
 		getSVNPathListPage() {
 			this.listLoading = true;
-			var params = { 
-				token: sessionStorage.getItem('token'), 
-				username: sessionStorage.getItem('username'), 
-				dir_n: this.dir_n,
-				page: this.page,
-				svnPath: this.filters.svnKeyword 
-			};
+			// var params = { page: this.page, svnPath: this.filters.svnPath };
+			var params = { token: sessionStorage.getItem('token'), username: sessionStorage.getItem('username'), page: this.page, svnPath: this.filters.svnKeyword };
 			// NProgress.start();
 			getSVNPathList(params).then(res => {
-				this.total = res.data.total;
-				this.svnPathList = [];
-				this.svn_lists = res.data.svn_lists;
+				this.listLoading = false;
+				// this.total = res.data.total;
+				this.svn_lists = res.svn_lists;
 				for(let svn_list of this.svn_lists) {
 					let svnPath = {};
 					svnPath.svnName = svn_list.name;
@@ -154,28 +158,11 @@ export default {
 				console.log(this.svnPathList);
 				console.log(this.svn_lists);
 				console.log(res);
-				this.listLoading = false;
 			});
 		},
-		handleCurrentChange(value) {
-			this.page = value;
-			console.log("this.page");
-			console.log(this.page);
-			this.getSVNPathListPage();
-		},
-        rowClick(row, event, column) {
-            Array.prototype.remove = function (val) {
-                let index = this.indexOf(val);
-                if (index > -1) {
-                    this.splice(index, 1);
-                }
-            };
-            if (this.expands.indexOf(row.id) < 0) {
-                this.expands.push(row.id);
-            } else {
-                this.expands.remove(row.id);
-            }
-        }
+		selsChange(sels) {
+			this.sels = sels;
+		}
 	},
 	mounted() {
 		this.getSVNPathListPage();

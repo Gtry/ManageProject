@@ -15,4 +15,13 @@ python manage.py migrate svn --database=svndb --fake-initial
 
 4. AllSVN主界面展示示例
 
+5. AllSVN界面expand列增加点击event，实现动态获取子svn基础信息
+
+2018.11.20
+
+1. 表格样式：table行距等
+
+2. 左侧图标显示
+
+3. 
 

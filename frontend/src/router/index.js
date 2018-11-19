@@ -50,7 +50,7 @@ const router = new Router({
       component: Home,
       name: '权限查看',
       // 图标样式
-      iconCls: 'el-icon-message',
+      iconCls: 'fa fa-folder-open-o',
       children: [
       	{ path: '/main', component: Main, name: '主页', hidden: true, meta: { requiresAuth: true } },
       	{ path: '/personal-svn', component: PersonalSVN, name: 'PersonalSVN', meta: { requiresAuth: true } },
@@ -78,7 +78,7 @@ const router = new Router({
       component: Home,
       name: 'analysis',
       // 图标样式
-      iconCls: 'fa fa-id-card-o',
+      iconCls: 'fa fa-bar-chart',
       // 只有一个节点
       leaf: true,
       children: [
@@ -90,7 +90,7 @@ const router = new Router({
       component: Home,
       name: '关于',
       // 图标样式
-      iconCls: 'fa fa-id-card-o',
+      iconCls: 'fa fa-address-card',
       // 只有一个节点
       leaf: true,
       children: [

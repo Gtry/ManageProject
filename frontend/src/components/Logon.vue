@@ -70,7 +70,7 @@
                 console.log(res.message);
                 this.$router.push({ path: '/login' });
               } else {
-                console.log(res.message);
+                alert(res.message);
               }
             });
           } else {
