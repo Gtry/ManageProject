@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import { requestLogin } from '@/assets/js/api';
+  import { requestLogin, getCookie } from '@/assets/js/api';
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -61,8 +61,10 @@
               //NProgress.done();
               this.logining = false;
               if (res.status == 200) {
-                this.$store.dispatch('UserLogin', res.token);
-                this.$store.dispatch('UserName', res.username);
+                var token = res.token;
+                var username = res.username;
+                this.$store.dispatch('UserLogin', token);
+                this.$store.dispatch('UserName', username);
                 this.$router.push({ path: '/main' });
               } else {
               }

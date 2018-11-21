@@ -35,7 +35,9 @@ def userLogin(request):
 		if user.username:
 			if user.password == password:
 				# 生成随机字符串
-				request.session['username'] = username
+				if request.session.get('username'):
+					del request.session["username"] 
+				request.session["username"] = username
 				response['token'] = request.session.session_key
 				response['username'] = username
 				response['message'] = 'Login Success'
@@ -49,6 +51,12 @@ def userLogin(request):
 	except Exception as e:
 		response['message'] = str(e)
 		response['status'] = 500
+	finally:
+		pass
+		#response["Access-Control-Allow-Credentials"] = "true"
+		#response["Access-Control-Allow-Origin"] = "http://192.168.10.101:8080"
+		#response["Access-Control-Allow-Methods"] = "GET,POST"
+		#response["Access-Control-Allow-Headers"] = "Origin,Content-Type,Cookie,Accept,Token"
 	return JsonResponse(response)
 
 def userInfo(request):
