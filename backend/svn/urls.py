@@ -4,4 +4,5 @@ from backend.svn import views
 
 urlpatterns = [
 	path(r'getSVNPathList', views.getSVNPathList),
+	path(r'getSVNPathDetail', views.getSVNPathDetail),
 ]

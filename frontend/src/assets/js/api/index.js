@@ -97,15 +97,18 @@ export const requestLogon = data => {
     return axios.post(`/user/userLogon`, data).then(res => res.data).catch(err => console.log(err));
 };
 
-export const requestLogin = data => {
-    return axios.post(`/user/userLogin`, data).then(res => res.data);
+export const requestLogin = params => {
+    return axios.get('/user/userLogin', { params: params }).then(res => res.data);
 };
 
-export const requestInfo = data => {
-    return axios.post(`/user/userInfo`, data).then(res => res.data).catch(err => console.log(err));
+export const requestInfo = params => {
+    return axios.post('/user/userInfo', { params: params }).then(res => res.data);
 };
 
-export const getSVNPathList = data => {
-    return axios.post(`/svn/getSVNPathList`, data).then(res => res.data);
+export const getSVNPathList = params => {
+    return axios.get('/svn/getSVNPathList', { params: params }).then(res => res.data);
 };
 
+export const getSVNPathDetail = params => {
+    return axios.get('/svn/getSVNPathDetail', { params: params }).then(res => res.data);
+};

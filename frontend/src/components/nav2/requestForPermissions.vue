@@ -1,6 +1,6 @@
 <template>
     <section>
-        Analysis
+        Apply
     </section>
 </template>
 

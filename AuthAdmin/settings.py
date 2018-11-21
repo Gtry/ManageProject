@@ -103,6 +103,8 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': '127.0.0.1',
+        # 'PASSWORD': 'mysql123'
+        # 'HOST': '10.6.5.123'
         'PORT': '3306',
     }
 }
@@ -146,6 +148,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/

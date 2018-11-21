@@ -1,5 +1,7 @@
 1. 图标
 https://www.thinkcmf.com/font/font_awesome/icons.html
 
-2. 
+2. ui
+npm install --save-dev iview@3.1.5
+
 

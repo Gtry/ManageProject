@@ -26,20 +26,18 @@ def userLogon(request):
 		response['status'] = 500
 	return JsonResponse(response)
 
-@require_http_methods(['POST'])
 def userLogin(request):
 	response = {}
 	try:
-		req = json.loads(request.body.decode())
-		username = req['username']
-		password = req['password']
-		user = UserInfo.objects.get(username=req['username'])
+		username = request.GET.get('username', '')
+		password = request.GET.get('password', '')
+		user = UserInfo.objects.get(username=username)
 		if user.username:
-			if user.password == req['password']:
+			if user.password == password:
 				# 生成随机字符串
-				request.session['username'] = req['username']
+				request.session['username'] = username
 				response['token'] = request.session.session_key
-				response['username'] = req['username']
+				response['username'] = username
 				response['message'] = 'Login Success'
 				response['status'] = 200
 			else:
@@ -53,16 +51,16 @@ def userLogin(request):
 		response['status'] = 500
 	return JsonResponse(response)
 
-@require_http_methods(['POST'])
 def userInfo(request):
 	permission_classes = (permissions.IsAuthenticated,)
 	response = {}
 	try:
-		req = json.loads(request.body.decode())
+		token = request.GET.get('token', '')
+		username = request.GET.get('username', '')
 		response['message'] = request.session.session_key
-		if req['token'] == request.session.session_key:
-			response['token'] = req['token']
-			response['username'] = req['username']
+		if token == request.session.session_key:
+			response['token'] = token
+			response['username'] = username
 			response['message'] = "Success: show user info!"
 			response['status'] = 200
 		else:
