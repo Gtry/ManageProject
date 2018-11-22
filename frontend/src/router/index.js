@@ -28,12 +28,6 @@ const router = new Router({
       hidden: true
     },
     {
-      path: '/404',
-      component: NotFound,
-      name: '',
-      hidden: true
-    },
-    {
       path: '/logon',
       component: Logon,
       name: '',
@@ -98,6 +92,12 @@ const router = new Router({
       ]
     },
     {
+      path: '/404',
+      component: NotFound,
+      name: '',
+      hidden: true
+    },
+    {
       path: '*',
       hidden: true,
     	redirect: { path: '/404' }
@@ -105,6 +105,7 @@ const router = new Router({
   ]
 });
 
+/*
 router.beforeEach((to, from, next) => {
 	// get token from store
 	let token = store.state.token;
@@ -122,5 +123,6 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+*/
 
 export default router;

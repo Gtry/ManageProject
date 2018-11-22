@@ -8,7 +8,8 @@ import router from './router/index'
 import Vuex from 'vuex'
 import store from '@/assets/js/store/index'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/theme-chalk/index.css'
+import '@/assets/css/theme-green/index.css'
 // icon
 import 'font-awesome/css/font-awesome.min.css'
 
