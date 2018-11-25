@@ -105,7 +105,6 @@ const router = new Router({
   ]
 });
 
-/*
 router.beforeEach((to, from, next) => {
 	// get token from store
 	let token = store.state.token;
@@ -123,6 +122,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-*/
 
 export default router;

@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { requestLogout } from '@/assets/js/api';
 export default {
   data() {
     return {
@@ -110,8 +111,16 @@ export default {
       this.$confirm('确认退出吗?', '提示', {
         //type: 'warning'
       }).then(() => {
-        this.$store.dispatch('UserLogout');
-        this.$router.push({ path: '/login' });
+        var params = { token: sessionStorage.getItem('token'), username: sessionStorage.getItem('username') };
+        requestLogout(params).then(res => {
+          //NProgress.done();
+          if (res.status == 200) {
+            console.log("aa")
+            this.$store.dispatch('UserLogout');
+            this.$router.push({ path: '/login' });
+          } else {
+          }
+        });
       }).catch(() => {
       });
     },

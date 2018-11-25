@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import { requestLogin, getCookie } from '@/assets/js/api';
+  import { requestLogin } from '@/assets/js/api';
   //import NProgress from 'nprogress'
   export default {
     data() {

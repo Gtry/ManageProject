@@ -94,7 +94,6 @@ instance.interceptors.response.use(
     }
 );
 
-
 /**
  * Created by Schon on 2018/9/13 0013.
  */
@@ -129,7 +128,6 @@ export function getCookie(name) {
   var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
   if (match) return match[2];
 }
-*/
 
 //获取cookie
 export function getCookie(name) {
@@ -155,6 +153,7 @@ export function delCookie (name) {
  if (cval != null)
   document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
 };
+*/
 
 export const requestLogon = data => {
     return axios.post(`/user/userLogon`, data).then(res => res.data).catch(err => console.log(err));
@@ -162,6 +161,10 @@ export const requestLogon = data => {
 
 export const requestLogin = params => {
     return axios.get('/user/userLogin', { params: params }).then(res => res.data);
+};
+
+export const requestLogout = params => {
+    return axios.get('/user/userLogout', { params: params }).then(res => res.data);
 };
 
 export const requestInfo = params => {

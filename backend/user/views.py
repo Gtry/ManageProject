@@ -5,6 +5,8 @@ from django.core import serializers
 import json
 #from django.views.decorators.csrf import csrf_exempt 
 from backend.user.models import UserInfo
+from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.db import SessionStore
 
 # Create your views here.
 #@csrf_exempt
@@ -32,21 +34,18 @@ def userLogin(request):
 		username = request.GET.get('username', '')
 		password = request.GET.get('password', '')
 		user = UserInfo.objects.get(username=username)
-		if user.username:
-			if user.password == password:
-				# 生成随机字符串
-				if request.session.get('username'):
-					del request.session["username"] 
-				request.session["username"] = username
-				response['token'] = request.session.session_key
-				response['username'] = username
-				response['message'] = 'Login Success'
-				response['status'] = 200
-			else:
-				response['message'] = 'Login Failed: password error!'
-				response['status'] = 401
+		if user.password == password:
+			# 生成随机字符串
+			if request.session.get('username'):
+				del request.session["username"] 
+			request.session['username'] = username
+			request.session.set_expiry(60)
+			response['token'] = request.session.session_key
+			response['username'] = username
+			response['message'] = 'Login Success'
+			response['status'] = 200
 		else:
-			response['message'] = 'Login Failed: username not exist!'
+			response['message'] = 'Login Failed: username and password not match!'
 			response['status'] = 401
 	except Exception as e:
 		response['message'] = str(e)
@@ -60,12 +59,11 @@ def userLogin(request):
 	return JsonResponse(response)
 
 def userInfo(request):
-	permission_classes = (permissions.IsAuthenticated,)
+	#permission_classes = (permissions.IsAuthenticated,)
 	response = {}
 	try:
 		token = request.GET.get('token', '')
 		username = request.GET.get('username', '')
-		response['message'] = request.session.session_key
 		if token == request.session.session_key:
 			response['token'] = token
 			response['username'] = username
@@ -77,13 +75,15 @@ def userInfo(request):
 	except Exception as e:
 		response['message'] = str(e)
 		response['status'] = 500
+
+	response['message'] = str(request.user.is_authenticated)
 	return JsonResponse(response)
 
-@require_http_methods(['GET'])
 def userLogout(request):
 	response = {}
 	try:
-		request.session.flush()
+		# request.session.flush()
+		del request.session['username']
 		response['message'] = 'Logout Success'
 		response['status'] = 200
 	except Exception as e:
