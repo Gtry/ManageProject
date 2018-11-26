@@ -4,4 +4,6 @@ https://www.thinkcmf.com/font/font_awesome/icons.html
 2. ui
 npm install --save-dev iview@3.1.5
 
+3.规范
+npm install eslint@5.9.0
 
