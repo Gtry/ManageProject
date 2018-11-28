@@ -83,7 +83,7 @@ export default {
       sysName:'权限管理系统',
       collapsed:false,
       sysUserName: '游客',
-      sysUserAvatar: require('@/assets/image/profile_photo_male_1.jpg'),
+      sysUserAvatar: require('@/assets/images/profile_photo_male_1.jpg'),
       form: {
         name: '',
         region: '',

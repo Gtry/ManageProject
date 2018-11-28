@@ -1,6 +1,6 @@
 <template>
 <div class="Admittance margin">
-    <img src="@/assets/logo.png">
+    <img src="@/assets/images/logo.png">
     <h3>{{ msg }}</h3>
 
     <el-row type="flex" class="row-bg" :gutter="20">

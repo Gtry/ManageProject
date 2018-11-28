@@ -22,9 +22,15 @@ const router = new Router({
 	mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/Admittance',
       component: Admittance,
       name: '',
+      hidden: true
+    },
+    { 
+      path: '/',
+      component: () => import('@/views/login/index'),
+      name: 'login',
       hidden: true
     },
     {
