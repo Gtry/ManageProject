@@ -3,3 +3,6 @@ https://segmentfault.com/a/1190000015646531?utm_source=tag-newest
 
 webpack从零开始第1课:安装webpack和webpack-dev-server
 https://segmentfault.com/a/1190000012536871
+
+npm install 时总是报phantomjs-prebuilt@2.1.14安装失败
+http://www.cnblogs.com/alice626/p/6206722.html
